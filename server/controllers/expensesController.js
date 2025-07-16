@@ -2,23 +2,42 @@ const Expense = require('../models/expenseModel'); // Assuming you have an Expen
 
 const validateExpense = (expense) => {
   const { amount, description, paid_by, shared_with, split_type, split_values } = expense;
+
   if (!amount || amount <= 0) {
     return { valid: false, message: "Invalid amount" };
   }
+
   if (!description || description.trim().length === 0) {
     return { valid: false, message: "Invalid description" };
   }
+
   if (!paid_by || paid_by.trim().length === 0) {
     return { valid: false, message: "Invalid paid_by" };
   }
+
   if (!Array.isArray(shared_with) || shared_with.length === 0) {
     return { valid: false, message: "Invalid shared_with" };
   }
-  if ((split_type === "percentage" || split_type === "exact") && (!split_values || split_values.length !== shared_with.length)) {
-    return { valid: false, message: "Invalid split_values" };
+
+  if ((split_type === "percentage" || split_type === "exact")) {
+    if (!Array.isArray(split_values) || split_values.length !== shared_with.length) {
+      return { valid: false, message: "split_values must match length of shared_with" };
+    }
+
+    const sum = split_values.reduce((acc, val) => acc + val, 0);
+
+    if (split_type === "percentage" && Math.round(sum) !== 100) {
+      return { valid: false, message: "Percentage split must total 100%" };
+    }
+
+    if (split_type === "exact" && Math.round(sum * 100) !== Math.round(amount * 100)) {
+      return { valid: false, message: "Exact split must total the full amount" };
+    }
   }
+
   return { valid: true };
 };
+
 
 const addExpense = async (req, res) => {
   try {
