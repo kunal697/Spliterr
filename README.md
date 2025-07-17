@@ -47,6 +47,54 @@ https://www.postman.com/kunalb697/public/collection/pm5u1sb/spliterr-api?action=
 ## Live Link : 
 https://heroic-halva-06a7c9.netlify.app/
 
+---
+
+## Settlement Calculation Logic
+
+### `calculateBalances(expenses)`
+
+This function calculates how much each person owes or is owed.
+
+* Adds the full amount to the person who paid (`paid_by`).
+* Subtracts each person's share based on `split_type`:
+
+  * **equal**: splits amount equally among `shared_with`.
+  * **percentage**: splits amount using `split_values` as percentages.
+  * **exact**: splits amount using exact values from `split_values`.
+* Final balance:
+
+  * Positive → person is owed money.
+  * Negative → person owes money.
+
+---
+
+### `simplifySettlements(balances)`
+
+This function converts balances into direct settlements.
+
+* Separates people into debtors (owe money) and creditors (are owed money).
+* Matches debtors to creditors with minimum transactions.
+* Example:
+
+  ```
+  { A: 60, B: -40, C: -20 } 
+  → B pays A 40, C pays A 20
+  ```
+
+---
+
+## Assumptions and Limitations
+
+* Results are rounded to 2 decimal places to avoid floating point issues.
+* Assumes that `split_values.length` matches `shared_with.length`.
+* The payer can be included in the `shared_with` array.
+* Input validation is assumed to be done before calling this function.
+
+---
+
+
+
+
 ## ⚙️ Getting Started
 
 ### 1. Clone the repository
