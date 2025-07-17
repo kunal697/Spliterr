@@ -41,6 +41,12 @@
 └── server.js                     # Express app entry point
 ```
 
+## Postman Collection : 
+https://www.postman.com/kunalb697/public/collection/pm5u1sb/spliterr-api?action=share&creator=37054610
+
+## Live Link : 
+https://heroic-halva-06a7c9.netlify.app/
+
 ## ⚙️ Getting Started
 
 ### 1. Clone the repository
