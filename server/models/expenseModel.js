@@ -12,6 +12,12 @@ const expenseSchema = new mongoose.Schema(
       default: "equal",
     },
     split_values: [{ type: Number }],
+    category: {
+      type: String,
+      enum: ["Food", "Travel", "Utilities", "Entertainment", "Other"],
+      default: "Other",
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const expenseRoutes = require('./routes/expenseRoute');
 const settlementRoutes = require('./routes/settlementRoute');
+const analyticsRoute = require('./routes/analyticsRoute');
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.get('/', (req,res)=>{
 
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/settlements', settlementRoutes);
+app.use('/api/analytics', analyticsRoute);
 
 module.exports = app;

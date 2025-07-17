@@ -4,6 +4,7 @@ import AddExpenseForm  from "../components/AddExpenseForm";
 import { ExpenseList } from "../components/ExpenseList";
 import BalancesView  from "../components/BalancesView";
 import { SettlementSummary } from "../components/SettlementSummary";
+import AnalyticsDashboard from "../components/AnalyticsDashboard";
 import { Calculator, Users, Receipt, ArrowRightLeft } from "lucide-react";
 
 export default function HomePage() {
@@ -29,7 +30,7 @@ export default function HomePage() {
         </motion.div>
 
         {/* Tabs */}
-        <div className="grid grid-cols-4 gap-2 mb-6">
+        <div className="grid grid-cols-5 gap-2 mb-6">
           <button
             className={`flex items-center justify-center gap-2 p-2 border rounded ${activeTab === "expenses" ? "bg-indigo-200" : "bg-white"}`}
             onClick={() => setActiveTab("expenses")}
@@ -53,6 +54,12 @@ export default function HomePage() {
             onClick={() => setActiveTab("settlements")}
           >
             <ArrowRightLeft className="w-4 h-4" /> Settlements
+          </button>
+          <button
+            className={`flex items-center justify-center gap-2 p-2 border rounded ${activeTab === "analytics" ? "bg-indigo-200" : "bg-white"}`}
+            onClick={() => setActiveTab("analytics")}
+          >
+            <Calculator className="w-4 h-4" /> Analytics
           </button>
         </div>
 
@@ -87,6 +94,14 @@ export default function HomePage() {
               <h2 className="text-2xl font-semibold mb-2">Settlement Summary</h2>
               <p className="text-gray-500 mb-4">Simplified payment suggestions</p>
               <SettlementSummary key={refreshTrigger} />
+            </>
+          )}
+
+          {activeTab === "analytics" && (
+            <>
+              <h2 className="text-2xl font-semibold mb-2">Analytics</h2>
+              <p className="text-gray-500 mb-4">Spending breakdown, trends, and insights</p>
+              <AnalyticsDashboard />
             </>
           )}
         </div>

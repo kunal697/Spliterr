@@ -89,5 +89,47 @@ export const api = {
       console.error('Error fetching settlements:', error);
       throw error;
     }
-  }
+  },
+
+  async getAnalytics() {
+    const response = await fetch(`${API_BASE_URL}/analytics`);
+    if (!response.ok) throw new Error('Failed to fetch analytics');
+    return await response.json();
+  },
+
+
+  async getRecurringExpenses() {
+    const response = await fetch(`${API_BASE_URL}/recurring`);
+    if (!response.ok) throw new Error('Failed to fetch recurring expenses');
+    return await response.json();
+  },
+
+  async addRecurringExpense(expense) {
+    const response = await fetch(`${API_BASE_URL}/recurring`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(expense)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to add recurring expense');
+    return data;
+  },
+
+  async updateRecurringExpense(id, expense) {
+    const response = await fetch(`${API_BASE_URL}/recurring/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(expense)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to update recurring expense');
+    return data;
+  },
+
+  async deleteRecurringExpense(id) {
+    const response = await fetch(`${API_BASE_URL}/recurring/${id}`, {
+      method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete recurring expense');
+    return await response.json();
+  },
 };

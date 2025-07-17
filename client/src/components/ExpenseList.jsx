@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Edit, Users, Calendar, IndianRupee } from "lucide-react";
+import { Trash2, Edit, Users, Calendar, IndianRupee, Repeat } from "lucide-react";
 import { useExpense } from "../contexts/ExpenseContext";
 import LoadingSpinner from "./LoadingSpinner";
 import { useEffect, useState } from "react";
@@ -148,6 +148,10 @@ export function ExpenseList() {
                       <Calendar className="w-4 h-4" />
                       <span>{formatDate(expense.createdAt)}</span>
                     </div>
+                    {/* Category badge */}
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200`}>
+                      {expense.category}
+                    </span>
                   </div>
                 </div>
 

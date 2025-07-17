@@ -1,4 +1,4 @@
-// context/ExpenseContext.jsx
+// contexts/ExpenseContext.jsx
 import React, { createContext, useContext, useReducer } from 'react';
 import { api } from '../api/index.js';
 
@@ -10,7 +10,9 @@ const initialState = {
   balances: {},
   settlements: [],
   loading: false,
-  error: null
+  error: null,
+  analytics: {},
+  recurringExpenses: [],
 };
 
 function expenseReducer(state, action) {
@@ -41,6 +43,24 @@ function expenseReducer(state, action) {
       return { ...state, balances: action.payload };
     case 'SET_SETTLEMENTS':
       return { ...state, settlements: action.payload };
+    case 'SET_ANALYTICS':
+      return { ...state, analytics: action.payload };
+    case 'SET_RECURRING_EXPENSES':
+      return { ...state, recurringExpenses: action.payload };
+    case 'ADD_RECURRING_EXPENSE':
+      return { ...state, recurringExpenses: [...state.recurringExpenses, action.payload] };
+    case 'UPDATE_RECURRING_EXPENSE':
+      return {
+        ...state,
+        recurringExpenses: state.recurringExpenses.map(exp =>
+          exp._id === action.payload._id ? action.payload : exp
+        )
+      };
+    case 'DELETE_RECURRING_EXPENSE':
+      return {
+        ...state,
+        recurringExpenses: state.recurringExpenses.filter(exp => exp._id !== action.payload)
+      };
     default:
       return state;
   }
@@ -118,6 +138,61 @@ export function ExpenseProvider({ children }) {
     }
   };
 
+  const fetchAnalytics = async () => {
+    try {
+      const result = await api.getAnalytics();
+      dispatch({ type: 'SET_ANALYTICS', payload: result.data || {} });
+      return result;
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
+      throw error;
+    }
+  };
+
+
+  const fetchRecurringExpenses = async () => {
+    try {
+      const result = await api.getRecurringExpenses();
+      dispatch({ type: 'SET_RECURRING_EXPENSES', payload: result.data || [] });
+      return result;
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
+      throw error;
+    }
+  };
+
+  const addRecurringExpense = async (expense) => {
+    try {
+      const result = await api.addRecurringExpense(expense);
+      dispatch({ type: 'ADD_RECURRING_EXPENSE', payload: result.data });
+      return result;
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
+      throw error;
+    }
+  };
+
+  const updateRecurringExpense = async (id, expense) => {
+    try {
+      const result = await api.updateRecurringExpense(id, expense);
+      dispatch({ type: 'UPDATE_RECURRING_EXPENSE', payload: result.data });
+      return result;
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
+      throw error;
+    }
+  };
+
+  const deleteRecurringExpense = async (id) => {
+    try {
+      await api.deleteRecurringExpense(id);
+      dispatch({ type: 'DELETE_RECURRING_EXPENSE', payload: id });
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
+      throw error;
+    }
+  };
+
   return (
     <ExpenseContext.Provider value={{
       ...state,
@@ -127,7 +202,12 @@ export function ExpenseProvider({ children }) {
       deleteExpense,
       fetchPeople,
       fetchBalances,
-      fetchSettlements
+      fetchSettlements,
+      fetchAnalytics,
+      fetchRecurringExpenses,
+      addRecurringExpense,
+      updateRecurringExpense,
+      deleteRecurringExpense,
     }}>
       {children}
     </ExpenseContext.Provider>

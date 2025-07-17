@@ -20,6 +20,7 @@ const EditExpenseModal = ({ expense, onClose }) => {
     shared_with: [],
     split_type: 'equal',
     split_values: [],
+    category: 'Other',
   });
 
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ const EditExpenseModal = ({ expense, onClose }) => {
         shared_with: expense.shared_with || [],
         split_type: expense.split_type,
         split_values: expense.split_values || [],
+        category: expense.category || 'Other',
       });
     }
   }, [expense]);
@@ -213,6 +215,23 @@ const EditExpenseModal = ({ expense, onClose }) => {
               ))}
             </div>
           )}
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <select
+              required
+              value={formData.category}
+              onChange={e => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Food">Food</option>
+              <option value="Travel">Travel</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
           {/* Submit Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
